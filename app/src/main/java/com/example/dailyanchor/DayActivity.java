@@ -4,13 +4,18 @@ import android.content.Intent;
 import android.graphics.Outline;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,7 +30,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
 
-// SPECIFIC DAY ENTRY
 public class DayActivity extends AppCompatActivity {
 
     public static final String EXTRA_DATE = "date";
@@ -49,8 +53,10 @@ public class DayActivity extends AppCompatActivity {
 
     private EditText diary;
     private TextView promptText;
-    private ImageView photoSelected, photoPlaceholder;
+    private ImageView photoSelected;
+    private View photoPlaceholder;
     private LinearLayout moodRow;
+    private String currentPhoto;
 
     private final Random random = new Random();
     private int lastPrompt = 0;
@@ -62,8 +68,8 @@ public class DayActivity extends AppCompatActivity {
                     getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 } catch (SecurityException ignored) {
                 }
-                // TODO: save the photo: store.setPhoto(dayKey, uri.toString());
-                showPhoto(uri.toString());
+                currentPhoto = uri.toString();
+                showPhoto(currentPhoto);
             });
 
     @Override
@@ -86,7 +92,29 @@ public class DayActivity extends AppCompatActivity {
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
         diary = findViewById(R.id.diary_text);
-        // TODO: load saved diary text: diary.setText(store.getText(dayKey));
+        DemoSession.Entry previous = DemoSession.getEntry(dayKey);
+        if (previous != null) diary.setText(previous.text);
+        ScrollView scroll = findViewById(R.id.day_root);
+        diary.setOnFocusChangeListener((view, focused) -> {
+            if (focused) diary.post(() -> diary.requestRectangleOnScreen(
+                    new android.graphics.Rect(0, 0, diary.getWidth(), diary.getHeight()), false));
+        });
+        diary.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                scroll.post(() -> diary.requestRectangleOnScreen(
+                        new android.graphics.Rect(0, Math.max(0, diary.getHeight() - 80),
+                                diary.getWidth(), diary.getHeight()), false));
+            }
+        });
 
         promptText = findViewById(R.id.prompt_text);
         findViewById(R.id.btn_random_prompt).setOnClickListener(v -> {
@@ -98,7 +126,6 @@ public class DayActivity extends AppCompatActivity {
             promptText.setText(PROMPTS[next]);
         });
 
-        // photo
         photoSelected = findViewById(R.id.photo_selected);
         photoPlaceholder = findViewById(R.id.photo_placeholder);
         final float radius = 16 * getResources().getDisplayMetrics().density;
@@ -110,13 +137,25 @@ public class DayActivity extends AppCompatActivity {
         });
         photoSelected.setClipToOutline(true);
         findViewById(R.id.photo_box).setOnClickListener(v -> pickPhoto.launch(new String[]{"image/*"}));
-        String photo = null; // TODO: store.getPhoto(dayKey)
-        if (photo != null) showPhoto(photo);
+        currentPhoto = previous != null ? previous.photo : null;
+        if (currentPhoto != null) showPhoto(currentPhoto);
 
-        // mood picker
         moodRow = findViewById(R.id.mood_row);
-        selected = store.getMood(dayKey);
+        selected = DemoSession.getMood(dayKey, store);
         buildMoodRow();
+        HorizontalScrollView moodScroll = findViewById(R.id.mood_scroll);
+        int distance = Math.round(150 * getResources().getDisplayMetrics().density);
+        findViewById(R.id.mood_previous).setOnClickListener(v -> moodScroll.smoothScrollBy(-distance, 0));
+        findViewById(R.id.mood_next).setOnClickListener(v -> moodScroll.smoothScrollBy(distance, 0));
+        findViewById(R.id.btn_save_entry).setOnClickListener(v -> {
+            if (selected == null && diary.getText().toString().trim().isEmpty() && currentPhoto == null) {
+                Toast.makeText(this, "Add a mood or a little thought first!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            DemoSession.saveEntry(dayKey, selected, diary.getText().toString(), currentPhoto);
+            Toast.makeText(this, "Saved for this demo session ♡", Toast.LENGTH_SHORT).show();
+            finish();
+        });
     }
 
     private void showPhoto(String uri) {
@@ -145,20 +184,19 @@ public class DayActivity extends AppCompatActivity {
             ImageView face = new ImageView(this);
             face.setImageResource(m.face);
             face.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            face.setLayoutParams(new LinearLayout.LayoutParams(Math.round(80 * d), Math.round(80 * d)));
+            face.setLayoutParams(new LinearLayout.LayoutParams(Math.round(104 * d), Math.round(104 * d)));
             col.addView(face);
 
             TextView label = new TextView(this);
             label.setText(m.label);
-            label.setTextSize(12);
+            label.setTextSize(14);
             label.setTextColor(getColor(R.color.text_dark));
             label.setPadding(0, Math.round(4 * d), 0, 0);
             col.addView(label);
 
             col.setTag(m);
             col.setOnClickListener(v -> {
-                selected = (selected == m) ? null : m; // tap again to clear
-                // TODO: save the mood so Home/Calendar update: store.setMood(dayKey, selected);
+                selected = (selected == m) ? null : m;
                 updateMoodHighlight();
             });
             moodRow.addView(col);
@@ -173,9 +211,4 @@ public class DayActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // TODO: auto-save diary text: store.setText(dayKey, diary.getText().toString());
-    }
 }
