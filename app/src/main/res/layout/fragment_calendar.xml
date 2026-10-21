@@ -13,13 +13,42 @@
         android:paddingTop="48dp"
         android:paddingEnd="24dp">
 
-        <TextView
-            android:id="@+id/month_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/month_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/caprasimo_regular"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/month_previous"
+                android:layout_width="38dp"
+                android:layout_height="match_parent"
+                android:contentDescription="Previous month"
+                android:gravity="center"
+                android:text="‹"
+                android:textColor="@color/olive"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/month_next"
+                android:layout_width="38dp"
+                android:layout_height="match_parent"
+                android:contentDescription="Next month"
+                android:gravity="center"
+                android:text="›"
+                android:textColor="@color/olive"
+                android:textSize="32sp" />
+        </LinearLayout>
 
         <!-- S M T W H F S -->
         <LinearLayout
@@ -41,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:fontFamily="@font/caprasimo_regular"
             android:text="@string/week_summary"
             android:textColor="@color/text_dark"
             android:textSize="15sp"
@@ -49,6 +79,23 @@
         <include
             android:id="@+id/summary"
             layout="@layout/view_mood_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/caprasimo_regular"
+            android:text="@string/other_statistics"
+            android:textColor="@color/text_dark"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <include
+            android:id="@+id/charts"
+            layout="@layout/view_mood_charts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" />
