@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-// Fills the "This Week's Mood Summary"
+// Fills the "This Week's Mood Summary":D 
 public final class SummaryBinder {
 
     private SummaryBinder() {
@@ -19,7 +19,7 @@ public final class SummaryBinder {
         Context ctx = summaryRoot.getContext();
         LinearLayout container = summaryRoot.findViewById(R.id.summary_container);
         container.removeAllViews();
-        int[] pct = store.weekPercentages();
+        int[] pct = DemoSession.weekPercentages(store);
         float density = ctx.getResources().getDisplayMetrics().density;
 
         for (Mood mood : Mood.values()) {
