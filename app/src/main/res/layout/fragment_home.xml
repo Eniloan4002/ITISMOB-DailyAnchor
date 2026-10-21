@@ -12,26 +12,58 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/app_name"
-            android:textColor="@color/text_dark"
-            android:textSize="32sp"
-            android:textStyle="bold" />
-
-        <TextView
             android:id="@+id/welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/caprasimo_regular"
             android:textColor="@color/text_dark"
-            android:textSize="18sp"
+            android:textSize="19sp"
             android:textStyle="bold" />
 
-        <!-- day chips -->
+        <LinearLayout
+            android:layout_width="240dp"
+            android:layout_height="42dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_rounded_beige"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/period_day"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Day"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/period_week"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Week"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/period_month"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Month"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
         <HorizontalScrollView
             android:id="@+id/day_scroll"
             android:layout_width="match_parent"
@@ -54,6 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/caprasimo_regular"
             android:text="@string/how_feeling"
             android:textColor="@color/text_dark"
             android:textSize="15sp"
@@ -132,6 +165,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/caprasimo_regular"
             android:text="@string/week_summary"
             android:textColor="@color/text_dark"
             android:textSize="15sp"
@@ -145,5 +179,65 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/caprasimo_regular"
+            android:text="@string/memory_title"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/memories_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="24dp"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/memories_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_rounded_beige"
+            android:gravity="center"
+            android:minHeight="94dp"
+            android:padding="15dp"
+            android:text="Your little moments will live here. Add a photo to an entry to begin!"
+            android:textColor="@color/text_dark"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="22dp"
+            android:fontFamily="@font/caprasimo_regular"
+            android:text="A quote for today"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/quote_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_card_white"
+            android:minHeight="80dp"
+            android:gravity="center_vertical"
+            android:padding="18dp"
+            android:textColor="@color/text_dark"
+            android:textSize="14sp" />
     </LinearLayout>
 </ScrollView>
