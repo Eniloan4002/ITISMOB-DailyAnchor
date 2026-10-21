@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         navCalendar.setOnClickListener(v -> showTab(TAB_CALENDAR));
         navProfile.setOnClickListener(v -> showTab(TAB_PROFILE));
 
-        // entry button
         findViewById(R.id.fab_write).setOnClickListener(v ->
                 openDay(MoodStore.key(Calendar.getInstance())));
 
@@ -76,10 +75,27 @@ public class MainActivity extends AppCompatActivity {
         updateNavIcons();
     }
 
+    public void openCalendarMonth(int year, int month) {
+        currentTab = TAB_CALENDAR;
+        CalendarFragment fragment = new CalendarFragment();
+        Bundle args = new Bundle();
+        args.putInt("year", year);
+        args.putInt("month", month);
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+        updateNavIcons();
+    }
+
     private void updateNavIcons() {
         navHome.setImageResource(currentTab == TAB_HOME ? R.drawable.nav_home_on : R.drawable.nav_home_off);
         navCalendar.setImageResource(currentTab == TAB_CALENDAR ? R.drawable.nav_calendar_on : R.drawable.nav_calendar_off);
         navProfile.setImageResource(currentTab == TAB_PROFILE ? R.drawable.nav_profile_on : R.drawable.nav_profile_off);
+        navHome.setColorFilter(getColor(currentTab == TAB_HOME ? R.color.text_dark : R.color.bg_cream));
+        navCalendar.setColorFilter(getColor(currentTab == TAB_CALENDAR ? R.color.text_dark : R.color.bg_cream));
+        navProfile.setColorFilter(getColor(currentTab == TAB_PROFILE ? R.color.text_dark : R.color.bg_cream));
     }
 
     private void openDay(String dayKey) {
